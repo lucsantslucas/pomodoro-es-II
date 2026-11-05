@@ -1,0 +1,29 @@
+name: CI Multi-OS and Multi-Version (Julia)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} with Julia ${{ matrix.julia-version }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        julia-version: ['1.9', '1.10']
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Julia ${{ matrix.julia-version }}
+      uses: julia-actions/setup-julia@v2
+      with:
+        version: ${{ matrix.julia-version }}
+
+    - name: Run Pomodoro Unit Tests
+      run: julia pomodoro.jl
